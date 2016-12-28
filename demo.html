@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/swiper.min.css">
+	<style>
+		*{margin:0;padding: 0}
+		.swiper-container,.swiper-wrapper,.swiper-slide{width: 100%;height: 100px;}
+		.swiper-slide{background: #ccc;}
+	</style>
+</head>
+<body>
+	
+	<div class="swiper-container">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide slide1"><video controls="" src="a.mp4" width="100%" height="100"></video></div>
+			<div class="swiper-slide">
+				<video controls="" src="a.mp4" width="100%" height="100"></video>
+			</div>
+			<div class="swiper-slide"><video controls="" src="a.mp4" width="100%" height="100"></video></div>
+		</div>
+	</div>
+	
+	<script src="js/swiper.min.js"></script>
+	<script>
+	
+		var slides=document.querySelectorAll(".swiper-slide");
+		var myswiper=new Swiper(".swiper-container",{
+			autoplayDisableOnInteraction : false,//用户操作swiper之后自动切换不会停止
+			autoplay:2000,
+			loop:true,
+			onTransitionEnd:function(swiper){
+				var videos=document.querySelectorAll("video");
+				var currentSlide=document.querySelector(".swiper-slide-active");
+				var video=currentSlide.getElementsByTagName("video")[0];
+				
+				if(video){
+					//为了可以获取到myswiper
+					setTimeout(function(){
+						myswiper.stopAutoplay()
+					},100)
+					//只有当前video播放
+					onlyCurrentVideoPlay(video,videos)
+					//何时可以开始轮播
+					startAutoplay(video)
+				}
+			}	
+		})
+
+		function startAutoplay(video){
+			video.addEventListener("ended",function(){
+				myswiper.startAutoplay();
+			})	
+			video.addEventListener("pause",function(){
+				myswiper.startAutoplay();
+			})	
+		}
+
+		function onlyCurrentVideoPlay(currentVideo,videos){
+			Array.from(videos).forEach(function(val,ind){
+				val.currentTime=0;
+				val.pause();
+			})
+			currentVideo.play()
+		}
+	</script>
+</body>
+</html>
